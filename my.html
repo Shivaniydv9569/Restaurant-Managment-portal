@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Management System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #fdfbfb, #ebedee);
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+header img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+/* NAVBAR */
+nav {
+    background: #222;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: #ff9800;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.section {
+    display: none;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.active { display: block; }
+
+/* FORMS */
+input, select {
+    padding: 10px;
+    margin: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #ff512f, #f09819);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+}
+
+th {
+    background: #ff9800;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+/* CART */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f5f5f5;
+    margin: 6px 0;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+/* DASHBOARD CARDS */
+.dashboard-cards {
+    display: flex;
+    gap: 1rem;
+}
+
+.card {
+    flex: 1;
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🍽️ Restaurant Management System</h1>
+<p>Smart • Simple • Efficient</p>
+<img src="https://images.unsplash.com/photo-1555992336-cbf1eec52f9c" alt="Restaurant Food">
+</header>
+
+<nav>
+<a href="#" onclick="showSection('dashboard')">Dashboard</a>
+<a href="#" onclick="showSection('menu')">Menu</a>
+<a href="#" onclick="showSection('orders')">Orders</a>
+<a href="#" onclick="showSection('orderHistory')">History</a>
+<a href="#" onclick="showSection('inventory')">Inventory</a>
+<a href="#" onclick="showSection('reports')">Reports</a>
+</nav>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section active">
+<h2>📊 Dashboard</h2>
+<div class="dashboard-cards">
+    <div class="card">
+        <h3>Total Orders</h3>
+        <h1 id="totalOrders">0</h1>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#ff9966,#ff5e62)">
+        <h3>Low Stock</h3>
+        <h1 id="lowStock">0</h1>
+    </div>
+</div>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="section">
+<h2>🍕 Menu Management</h2>
+<form id="menuForm">
+<input id="dishName" placeholder="Dish Name" required>
+<input type="number" id="price" placeholder="Price" required>
+<button>Add Dish</button>
+</form>
+
+<table id="menuTable">
+<thead><tr><th>Dish</th><th>Price</th><th>Action</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- ORDERS -->
+<div id="orders" class="section">
+<h2>🛒 Place Order</h2>
+
+<input id="customerName" placeholder="Customer Name">
+<select id="dishSelect"></select>
+<button onclick="addToCart()">Add Item</button>
+
+<h3>Selected Items</h3>
+<ul id="cartList"></ul>
+<button onclick="placeOrder()">Place Order</button>
+
+<table id="orderTable">
+<thead>
+<tr><th>Customer</th><th>Dish</th><th>Price</th><th>Status</th><th>Action</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- HISTORY -->
+<div id="orderHistory" class="section">
+<h2>📜 Order History</h2>
+<table id="historyTable">
+<thead><tr><th>Customer</th><th>Dish</th><th>Price</th><th>Date</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- INVENTORY -->
+<div id="inventory" class="section">
+<h2>📦 Inventory</h2>
+<form id="inventoryForm">
+<input id="itemName" placeholder="Item Name" required>
+<input type="number" id="quantity" placeholder="Quantity" required>
+<button>Add Item</button>
+</form>
+
+<table id="inventoryTable">
+<thead><tr><th>Item</th><th>Quantity</th><th>Action</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- REPORTS -->
+<div id="reports" class="section">
+<h2>📈 Reports</h2>
+<p><strong>Most Popular Dish:</strong> <span id="popularDish">None</span></p>
+</div>
+
+</div>
+
+<script>
+let menu=JSON.parse(localStorage.getItem("menu"))||[];
+let orders=JSON.parse(localStorage.getItem("orders"))||[];
+let inventory=JSON.parse(localStorage.getItem("inventory"))||[];
+let cart=[];
+
+function showSection(id){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+updateDashboard();
+}
+
+/* MENU */
+menuForm.onsubmit=e=>{
+e.preventDefault();
+menu.push({name:dishName.value,price:price.value});
+localStorage.setItem("menu",JSON.stringify(menu));
+renderMenu();updateDishSelect();e.target.reset();
+};
+
+function renderMenu(){
+menuTable.querySelector("tbody").innerHTML=menu.map((d,i)=>`
+<tr><td>${d.name}</td><td>₹${d.price}</td>
+<td><button onclick="menu.splice(${i},1);saveMenu()">Delete</button></td></tr>`).join("");
+}
+function saveMenu(){localStorage.setItem("menu",JSON.stringify(menu));renderMenu();updateDishSelect();}
+
+/* CART */
+function updateDishSelect(){
+dishSelect.innerHTML=menu.map(d=>`<option value="${d.name}">${d.name} - ₹${d.price}</option>`).join("");
+}
+function addToCart(){
+let d=menu.find(x=>x.name===dishSelect.value);
+cart.push(d);renderCart();
+}
+function renderCart(){
+cartList.innerHTML=cart.map((d,i)=>`<li>${d.name} - ₹${d.price}
+<button onclick="cart.splice(${i},1);renderCart()">❌</button></li>`).join("");
+}
+function placeOrder(){
+if(!customerName.value||cart.length==0)return alert("Missing details");
+cart.forEach(i=>orders.push({customer:customerName.value,dish:i.name,price:i.price,status:"Pending",date:new Date().toLocaleDateString()}));
+localStorage.setItem("orders",JSON.stringify(orders));
+cart=[];customerName.value="";
+renderCart();renderOrders();renderHistory();updateDashboard();
+}
+
+/* ORDERS */
+function renderOrders(){
+orderTable.querySelector("tbody").innerHTML="";
+orders.forEach((o,i)=>{
+if(o.status=="Pending"){
+orderTable.querySelector("tbody").innerHTML+=`
+<tr><td>${o.customer}</td><td>${o.dish}</td><td>₹${o.price}</td>
+<td>${o.status}</td>
+<td><button onclick="completeOrder(${i})">Complete</button></td></tr>`;
+}});
+}
+function completeOrder(i){
+orders[i].status="Completed";
+localStorage.setItem("orders",JSON.stringify(orders));
+renderOrders();renderHistory();updateDashboard();
+}
+
+/* HISTORY */
+function renderHistory(){
+historyTable.querySelector("tbody").innerHTML=orders.filter(o=>o.status=="Completed")
+.map(o=>`<tr><td>${o.customer}</td><td>${o.dish}</td><td>₹${o.price}</td><td>${o.date}</td></tr>`).join("");
+}
+
+/* INVENTORY */
+inventoryForm.onsubmit=e=>{
+e.preventDefault();
+inventory.push({name:itemName.value,quantity:quantity.value});
+localStorage.setItem("inventory",JSON.stringify(inventory));
+renderInventory();e.target.reset();
+};
+function renderInventory(){
+inventoryTable.querySelector("tbody").innerHTML=inventory.map((i,idx)=>`
+<tr><td>${i.name}</td><td>${i.quantity}</td>
+<td><button onclick="inventory.splice(${idx},1);renderInventory()">Delete</button></td></tr>`).join("");
+}
+
+/* DASHBOARD */
+function updateDashboard(){
+totalOrders.textContent=orders.length;
+lowStock.textContent=inventory.filter(i=>i.quantity<10).length;
+let c={};orders.forEach(o=>c[o.dish]=(c[o.dish]||0)+1);
+popularDish.textContent=Object.keys(c).sort((a,b)=>c[b]-c[a])[0]||"None";
+}
+
+/* INIT */
+renderMenu();renderOrders();renderHistory();renderInventory();updateDishSelect();updateDashboard();
+</script>
+
+</body>
+</html>
